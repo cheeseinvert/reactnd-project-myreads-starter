@@ -20,10 +20,12 @@ class BooksApp extends React.Component {
     })
   }
   updateBook(book, shelf) {
-    BooksAPI.update(book, shelf).then((book, shelf) => {
-      this.setState((s) => ({
+    BooksAPI.update(book, shelf).then(data => {
+          console.log(data)
+          this.setState((s) => ({
           books: s.books.map((b) => {
               if (book.id === b.id) {b.shelf = shelf}
+              return b
           })
       }))
     })
@@ -63,21 +65,21 @@ class BooksApp extends React.Component {
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <ListBooks
-                    onUpdateBook={this.updateBook}
+                    onUpdateBook={this.updateBook.bind(this)}
                     books={this.state.books.filter((b) => b.shelf === "currentlyReading")}
                     />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <ListBooks
-                    onUpdateBook={this.updateBook}
+                    onUpdateBook={this.updateBook.bind(this)}
                     books={this.state.books.filter((b) => b.shelf === "wantToRead")}
                     />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
                   <ListBooks
-                    onUpdateBook={this.updateBook}
+                    onUpdateBook={this.updateBook.bind(this)}
                     books={this.state.books.filter((b) => b.shelf === "read")}
                     />
                 </div>
