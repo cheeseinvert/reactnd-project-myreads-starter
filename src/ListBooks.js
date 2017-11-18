@@ -1,47 +1,35 @@
 import React, { Component } from 'react';
+import Bookshelf from './Bookshelf'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import sortBy from 'sort-by'
+import camelCase from 'camelcase'
 
 class ListBooks extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
+    shelves: PropTypes.array.isRequired,
     onUpdateBook: PropTypes.func.isRequired
   }
-  
   render() {
-    const { books, onUpdateBook } = this.props
+    const { books, shelves, onUpdateBook } = this.props
     books.sort(sortBy('authors'))
-
     return (
-            <div className="bookshelf-books">
-              <ol className="books-grid">
-                {books.map((book) => (
-                    <li key={ book.id } className='book-list-item'>
-                    <div className="book">
-                      <div className="book-top">
-                        <div className="book-cover" 
-                                style={{ width: 128, height: 194,
-                                        backgroundImage: `url(${book.imageLinks.thumbnail})`
-                        }}></div>
-                        <div className="book-shelf-changer">
-                          <select value={book.shelf} onChange={(event) => onUpdateBook(book, event.target.value)}>
-                            <option value="none" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="book-title">{book.title}</div>
-                      <div className="book-authors">{book.authors}</div>
-                    </div>
-                    </li>
+        <div className="list-books-content">
+          <div>
+            {shelves.map((s) => (
+                <Bookshelf 
+                    key={ camelCase(s)} 
+                    onUpdateBook={onUpdateBook}
+                    books={books.filter((b) => b.shelf === camelCase(s))}
+                    shelf={s} />
                 ))}
-              </ol>
-            </div>
-    )
-  }
-}
+          </div>
+          <div className="open-search">
+            <Link to='/search'>Add a book</Link>
+          </div>
+        </div>
+)}}
+
 
 export default ListBooks
