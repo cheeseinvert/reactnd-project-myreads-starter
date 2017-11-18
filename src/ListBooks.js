@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import Bookshelf from './Bookshelf';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import sortBy from 'sort-by';
-import camelCase from 'camelcase';
+import React, { Component } from "react";
+import Bookshelf from "./Bookshelf";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import sortBy from "sort-by";
+import camelCase from "camelcase";
 
 class ListBooks extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
     shelves: PropTypes.array.isRequired,
-    onUpdateBook: PropTypes.func.isRequired,
+    onUpdateBook: PropTypes.func.isRequired
   };
   render() {
     const { books, shelves, onUpdateBook } = this.props;
-    books.sort(sortBy('authors'));
+    books.sort(sortBy("authors"));
     return (
       <div className="list-books-content">
         <div>

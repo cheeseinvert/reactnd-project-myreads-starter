@@ -1,14 +1,14 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
-import * as BooksAPI from './BooksAPI';
-import ListBooks from './ListBooks';
-import SearchBooks from './SearchBooks';
-import './App.css';
+import React from "react";
+import { Route } from "react-router-dom";
+import * as BooksAPI from "./BooksAPI";
+import ListBooks from "./ListBooks";
+import SearchBooks from "./SearchBooks";
+import "./App.css";
 
 class BooksApp extends React.Component {
   state = {
     books: [],
-    shelves: ['Currently Reading', 'Want to Read', 'Read'],
+    shelves: ["Currently Reading", "Want to Read", "Read"]
   };
   componentDidMount() {
     BooksAPI.getAll().then(books => {
@@ -19,7 +19,7 @@ class BooksApp extends React.Component {
     BooksAPI.update(book, shelf).then(data => {
       if (this.state.books.indexOf(book) < 0) {
         this.setState(s => ({
-          books: s.books.concat([book]),
+          books: s.books.concat([book])
         }));
       }
       this.setState(s => ({
@@ -28,7 +28,7 @@ class BooksApp extends React.Component {
             b.shelf = shelf;
           }
           return b;
-        }),
+        })
       }));
     });
   }
@@ -54,7 +54,10 @@ class BooksApp extends React.Component {
         <Route
           path="/search"
           render={() => (
-            <SearchBooks onUpdateBook={this.updateBook.bind(this)} />
+            <SearchBooks
+              onUpdateBook={this.updateBook.bind(this)}
+              existingBookshelf={this.state.books}
+            />
           )}
         />
       </div>

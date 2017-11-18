@@ -1,22 +1,31 @@
-import React, { Component } from 'react';
-import * as BooksAPI from './BooksAPI';
-import PropTypes from 'prop-types';
-import Bookshelf from './Bookshelf';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import * as BooksAPI from "./BooksAPI";
+import PropTypes from "prop-types";
+import Bookshelf from "./Bookshelf";
+import { Link } from "react-router-dom";
 
 class SearchBooks extends Component {
   state = {
-    books: [],
+    books: []
   };
   static propTypes = {
     onUpdateBook: PropTypes.func.isRequired,
+    existingBookshelf: PropTypes.array.isRequired
   };
   doSearch(query) {
+    const { existingBookshelf } = this.props;
     let maxResults = 5;
-    console.log(`doing search "${query}"`);
     BooksAPI.search(query, maxResults)
       .then(books => {
-        console.log(`setting books: ${books}`);
+        existingBookshelf.map(existingBook => {
+          books.map(b => {
+            if (b.title === existingBook.title) {
+              b.shelf = existingBook.shelf;
+            }
+            return b;
+          });
+          return true;
+        });
         this.setState({ books });
       })
       .catch(this.setState({ books: [] }));
