@@ -14,18 +14,19 @@ class SearchBooks extends Component {
   };
   doSearch(query) {
     const { existingBookshelf } = this.props;
-    let maxResults = 5;
+    let maxResults = 20;
     BooksAPI.search(query, maxResults)
       .then(books => {
-        existingBookshelf.map(existingBook => {
-          books.map(b => {
-            if (b.title === existingBook.title) {
-              b.shelf = existingBook.shelf;
-            }
-            return b;
+        books.length > 0 &&
+          existingBookshelf.map(existingBook => {
+            books.map(b => {
+              if (b.title === existingBook.title) {
+                b.shelf = existingBook.shelf;
+              }
+              return b;
+            });
+            return true;
           });
-          return true;
-        });
         this.setState({ books });
       })
       .catch(this.setState({ books: [] }));
@@ -55,11 +56,13 @@ class SearchBooks extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <Bookshelf
-            shelf="Search Results"
-            books={this.state.books}
-            onUpdateBook={onUpdateBook}
-          />
+          {this.state.books.length > 0 && (
+            <Bookshelf
+              shelf="Search Results"
+              books={this.state.books}
+              onUpdateBook={onUpdateBook}
+            />
+          )}
         </div>
       </div>
     );
