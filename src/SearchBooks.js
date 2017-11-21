@@ -16,7 +16,7 @@ class SearchBooks extends Component {
   doSearch(query) {
     const { existingBookshelf } = this.props;
     let maxResults = 20;
-    //if(query.length < 2) return
+    if (query.length < 2) return;
     BooksAPI.search(query, maxResults)
       .then(books => {
         books instanceof Array &&
