@@ -16,21 +16,20 @@ class BooksApp extends React.Component {
     });
   }
   updateBook(book, shelf) {
-    BooksAPI.update(book, shelf).then(data => {
-      if (this.state.books.indexOf(book) < 0) {
-        this.setState(s => ({
-          books: s.books.concat([book])
-        }));
-      }
+    if (this.state.books.indexOf(book) < 0) {
       this.setState(s => ({
-        books: s.books.map(b => {
-          if (book.id === b.id) {
-            b.shelf = shelf;
-          }
-          return b;
-        })
+        books: s.books.concat([book])
       }));
-    });
+    }
+    this.setState(s => ({
+      books: s.books.map(b => {
+        if (book.id === b.id) {
+          b.shelf = shelf;
+        }
+        return b;
+      })
+    }));
+    BooksAPI.update(book, shelf);
   }
   render() {
     return (

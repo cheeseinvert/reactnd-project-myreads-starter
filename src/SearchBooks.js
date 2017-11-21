@@ -3,6 +3,7 @@ import * as BooksAPI from "./BooksAPI";
 import PropTypes from "prop-types";
 import Bookshelf from "./Bookshelf";
 import { Link } from "react-router-dom";
+import { Debounce } from "react-throttle";
 
 class SearchBooks extends Component {
   state = {
@@ -15,9 +16,11 @@ class SearchBooks extends Component {
   doSearch(query) {
     const { existingBookshelf } = this.props;
     let maxResults = 20;
+    //if(query.length < 2) return
     BooksAPI.search(query, maxResults)
       .then(books => {
-        books.length > 0 &&
+        books instanceof Array &&
+          books.length > 0 &&
           existingBookshelf.map(existingBook => {
             books.map(b => {
               if (b.title === existingBook.title) {
@@ -27,7 +30,7 @@ class SearchBooks extends Component {
             });
             return true;
           });
-        this.setState({ books });
+        books instanceof Array && this.setState({ books });
       })
       .catch(this.setState({ books: [] }));
   }
@@ -47,22 +50,25 @@ class SearchBooks extends Component {
 
           However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
           you don't find a specific author or title. Every search is limited by search terms.
+                
         */}
-            <input
-              type="text"
-              onInput={event => this.doSearch(event.target.value)}
-              placeholder="Search by title or author"
-            />
+            <Debounce time="400" handler="onInput">
+              <input
+                type="text"
+                onInput={event => this.doSearch(event.target.value)}
+                placeholder="Search by title or author"
+              />
+            </Debounce>
           </div>
         </div>
         <div className="search-books-results">
-          {this.state.books.length > 0 && (
+          {
             <Bookshelf
               shelf="Search Results"
               books={this.state.books}
               onUpdateBook={onUpdateBook}
             />
-          )}
+          }
         </div>
       </div>
     );

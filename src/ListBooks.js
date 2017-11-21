@@ -11,6 +11,11 @@ class ListBooks extends Component {
     shelves: PropTypes.array.isRequired,
     onUpdateBook: PropTypes.func.isRequired
   };
+  static defaultProps = {
+    books: [],
+    shelves: [],
+    onUpdateBook: () => {}
+  };
   render() {
     const { books, shelves, onUpdateBook } = this.props;
     books.sort(sortBy("authors"));
